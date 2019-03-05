@@ -8,6 +8,7 @@ use cortex_m;
 use k64f::Peripherals;
 use k64f::porte::pcr26::MUXW;
 use core::borrow::{Borrow, BorrowMut};
+use k64f::lptmr0::psr::PCSW;
 
 fn delay(time: u16, p: &mut Peripherals) {
     let timer = p.LPTMR0.borrow();
@@ -29,7 +30,7 @@ fn main() -> ! {
 
     p.GPIOE.pddr.write(|w| unsafe { w.bits(1 << 26) });
 
-    p.LPTMR0.psr.write(|w| w.pcs()._01().pbyp().set_bit());
+    p.LPTMR0.psr.write(|w| w.pcs().variant(PCSW::_01).pbyp().set_bit());
     p.LPTMR0.csr.write(|w| w.ten().set_bit());
 
     loop {
